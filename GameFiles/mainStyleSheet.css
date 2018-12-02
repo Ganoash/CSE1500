@@ -27,6 +27,10 @@ table{
     transform: translate(2px,9px);
 
 }
+.thisinfo{
+    border: 5px solid black;
+    
+}
 table.pieces tr th{
     width:62.5px;
     height: 61px;
