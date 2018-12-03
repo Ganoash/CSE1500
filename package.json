@@ -1,5 +1,5 @@
 {
-  "name": "CSE1500",
+  "name": "cse1500",
   "version": "1.0.0",
   "description": "Assignment 1\r 1.1)\r HEAD/regenradar/nederland/HTTP/1.1\r host: www.weer.nl",
   "main": "index.js",
