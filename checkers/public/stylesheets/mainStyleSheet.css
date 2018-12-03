@@ -1,0 +1,37 @@
+.main{
+    align-self: center;
+    align-content: center;
+    text-align: center;
+    width: 99% ;
+    height: 95%;
+}
+.game{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-49.5%, -47.5%);
+    height: 500px;
+    width: 500px;
+}
+#board{
+    position: absolute;
+    height: 500px;
+    width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-49.5%, -47.5%);
+    z-index: -1;
+}
+table{
+    position: absolute;
+    transform: translate(2px,9px);
+
+}
+table.pieces tr th{
+    width:62.5px;
+    height: 61px;
+}
+#footer-text{
+    text-align: center;
+    font-size: 9;
+}
