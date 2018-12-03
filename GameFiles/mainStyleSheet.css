@@ -28,12 +28,12 @@ table{
 
 }
 .thisinfo{
-    height: 53px;
-    width: 100px;
+    height: 118px;
+    width: 200px;
     position: absolute;
     top:50%;
     right:50%;
-    transform: translate(365px, 213px);
+    transform: translate(465px, 147px);
     border: 5px solid black;
     border-radius: 0px 15px 15px 0px;
 }
@@ -41,17 +41,36 @@ table{
     line-height: 5px;
 }
 .opponentinfo{
-    height: 53px;
-    width: 100px;
+    height: 118px;
+    width: 200px;
     position: absolute;
     top:50%;
     right:50%;
-    transform: translate(365px, -225px);
+    transform: translate(465px, -225.5px);
     border: 5px solid black;
     border-radius: 0px 15px 15px 0px;
 }
 .opponentinfo p{
     line-height: 5px;
+}
+.opponentkills{
+    height: 53.5px;
+    width: 65px;
+    position: absolute;
+    top:50%;
+    right:50%;
+    transform: translate(-245px, -225px);
+    border: 5px solid black;
+    border-radius: 15px 0px 0px 15px;
+}
+.opponentkills p img{
+    transform: translate(-.2px,-43.5px);
+    z-index: -1;
+}
+.opponentkills p{
+    color: rgb(255,255,255);
+    font-size: 28;
+    transform: translate(0px,-16px)
 }
 table.pieces tr th{
     width:62.5px;
