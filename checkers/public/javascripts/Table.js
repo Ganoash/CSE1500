@@ -1,160 +1,318 @@
-/* funtion for creating a 2D array*/
-function twoDarray(x, y) {
-    "use strict";
-    var ret = [], i;
-    for (i = 0; i < x; i + 1) {
-        ret.push(new Array(y));
-    }
-    return ret;
-}
-
-var start = function (){
-    "use strict";
-    var ret = twoDarray(8, 8), i, j;
-    /*initialising the array for the start values */
-    for (i = 0; i <= 7; i + 1) {
-        for (j = 0; j <= 7; j + 1) {
-            if ((i + j) % 2 === 1) {
-                start[i][j] = -1;
-            } else if (i <= 2) {
-                start[i][j] = 1;
-            } else if (i >= 5) {
-                start[i][j] = 2;
-            } else {
-                start[i][j] = 0;
+$(document).ready(function(){
+    /* funtion for creating a 2D array*/
+    function twoDarray(x, y) {
+        "use strict";
+        console.log("2D array started");
+        var ret = [], i, j;
+        for (i = 0; i < x; i++) {
+            var temp = []
+            for(j = 0; j < y; j++){
+                temp.push();
             }
+            ret.push(temp);
         }
-    }
-    return ret;
-}
-/* Javascript object covering the entries in the table */
-function Entry(row, collumn, value) {
-    "use strict";
-    this.collumn = collumn;
-    this.row = row;
-    this.value = value;
-    this.pointers = new Array(4);
-}
-Entry.prototype.getCollumn = function () {"use strict"; return this.collumn; };
-Entry.prototype.getRow = function () {"use strict"; return this.row; };
-Entry.prototype.getValue = function () {"use strict"; return this.value; };
-Entry.prototype.setValue = function (value) {"use strict"; this.value = value; };
-Entry.prototype.setPointer = function (index, pointer) {"use strict"; this.pointers[index] = pointer; };
-Entry.prototype.getPointer = function (index) {"use strict"; return this.pointers[index]; };
-//function for determining wether an entry has legal moves
-Entry.prototype.legalMoves = function () {
-    "use strict";
-    var ret = new Array(1);
-    ret[0] = 0;
-    if (this.legalHits(this.value).length === 0) {
-        if (this.getPointer(0).value === 0) {
-            ret.push(this.getPointer(0).value);
-        }
-        if (this.getPointer(1).value === 0) {
-            ret.push(this.getPointer(1).value);
-        }
-    } else {
-        ret[0] = 1;
-        ret = this.legalHits(this.value);
-    }
-    return ret;
-};
-//function for determining wether an entry has legal captures
-Entry.prototype.legalHits = function (value) {
-    "use strict";
-    var ret = [], n;
-    for (n = 0; n <= 1; n + 1) {
-        if (this.getPointer(n) != null && this.getPointer(n).value !== 0 && this.getPointer(n).value !== value) {
-            if (this.getPointer(n).getPointer(n).value !== null && this.getPointer(n).getPointer(n).value === 0) {
-                //push the piece end position on the array
-                ret.push(this.getPointer(n).getPointer(n));
-                //check if a second piece can be captured if so push that end location on the array
-                if (this.getPointer(n).getPointer(n).legalHits(value).length > 0) {
-                    ret.push(this.getPointer(n).getPointer(n).legalHits(value));
-                }
-            }
-        }
-    }
-    return ret;
-};
-/* gameobject for the table itself, and performing calculations to determine legal moves*/
-var Table = (function (PlayerId) {
-    "use strict";
-    this.board = twoDarray(8, 8);
-    this.id = PlayerId;
-    //initialising the board and entry pointers
-    var i, j;
-    for (i = 0; i <= 7; i + 1) {
-        for (j = 0; j <= 7;  j + 1) {
-            if (start()[i][j] >= 0) {
-                this.board[i][j] = new Entry(i, j, start()[i][j]);
-                if (i - 1 >= 0 && j - 1 >= 0) {
-                    this.board[i][j].setPointer(0, this.board[i - 1][j - 1]);
-                } else {
-                    this.board[i][j].setPointer(0, null);
-                }
-                if (i - 1 >= 0 && j + 1 <= 7) {
-                    this.board[i][j].setPointer(1, this.board[i - 1][j + 1]);
-                } else {
-                    this.board[i][j].setPointer(1, null);
-                }
-                if (i + 1 <= 7 && j - 1 >= 0) {
-                    this.board[i][j].setPointer(2, this.board[i + 1][j - 1]);
-                } else {
-                    this.board[i][j].setPointer(2, null);
-                }
-                if (i + 1 <= 7 && j + 1 <= 7) {
-                    this.board[i][j].setPointer(3, this.board[i + 1][j + 1]);
-                } else {
-                    this.board[i][j].setPointer(3, null);
-                }
-            } else {
-                this.board[i][j] = null;
-            }
-        }
+        return ret;
     }
 
-    return {
-        //function that returns an array with all entries with legal moves
-        legallist: function () {
-            var hitlist = [], movelist = [];
-            this.board.forEach(function (element) {
-                element.forEach(function (entry) {
-                    if (entry !== null && entry.getValue() === this.id) {
-                        if (entry.legalMoves()[0].length > 1) {
-                            if (entry.legalMoves()[0] === 0) {
-                                movelist.push(entry);
-                            }
-                            if (entry.legalMoves()[0] === 1) {
-                                hitlist.push(entry);
+    var start = function (){
+        "use strict";
+        var ret = twoDarray(8, 8), i, j;
+        /*initialising the array for the start values */
+        for (i = 0; i <= 7; i++) {
+            for (j = 0; j <= 7; j++) {
+                if ((i + j) % 2 === 1) {
+                    ret[i][j] = -1;
+                } else if (i <= 2) {
+                    ret[i][j] = 1;
+                } else if (i >= 5) {
+                    ret[i][j] = 2;
+                } else {
+                    ret[i][j] = 0;
+                }
+            }
+        }
+        return ret;
+    }
+    /* Javascript object covering the entries in the table */
+    function Entry(row, collumn, value) {
+        "use strict";
+        this.collumn = collumn;
+        this.row = row;
+        this.value = value;
+        this.pointers = new Array(4);
+    }
+    Entry.prototype.getCollumn = function () {"use strict"; return this.collumn; };
+    Entry.prototype.getRow = function () {"use strict"; return this.row; };
+    Entry.prototype.getValue = function () {"use strict"; return this.value; };
+    Entry.prototype.setValue = function (value) {"use strict"; this.value = value; };
+    Entry.prototype.setPointer = function (index, pointer) {"use strict"; this.pointers[index] = pointer; };
+    Entry.prototype.getPointer = function (index) {"use strict"; return this.pointers[index]; };
+    //function for determining wether an entry has legal moves
+    Entry.prototype.legalMoves = function (id) {
+        "use strict";
+        console.log("legalMoves called");
+        var ret = new Array(1),s;
+        ret[0] = 0;
+        if(id==1){
+            s = 2;
+        }
+        else{
+            s = 0;
+        }
+        if (this.legalHits(this.value).length === 0) {
+            console.log("no hits found");
+            console.log(this.pointers)
+            if (this.getPointer(0+s) != null && this.getPointer(0+s).getValue() === 0) {
+                ret.push(this.getPointer(0+s));
+                console.log(this.getPointer(0+s));
+            }
+            if (this.getPointer(1+s) != null && this.getPointer(1+s).getValue() === 0) {
+                ret.push(this.getPointer(1+s));
+            }
+        } else {
+            ret[0] = 1;
+            ret.concat(this.legalHits(this.value));
+        }
+        return ret;
+    };
+    //function for determining wether an entry has legal captures
+    Entry.prototype.legalHits = function (value) {
+        "use strict";
+        var ret = [], n;
+        for (n = 0; n <= 1; n++) {
+            if (this.getPointer(n) != null && this.getPointer(n).value !== 0 && this.getPointer(n).value !== value) {
+                if (this.getPointer(n).getPointer(n) !== null && this.getPointer(n).getPointer(n).value === 0) {
+                    //push the piece end position on the array
+                    ret.push(this.getPointer(n).getPointer(n));
+                    //check if a second piece can be captured if so push that end location on the array
+                    if (this.getPointer(n).getPointer(n).legalHits(value).length > 0) {
+                        ret.push(this.getPointer(n).getPointer(n).legalHits(value));
+                    }
+                }
+            }
+        }
+        return ret;
+    };
+    /* gameobject for the table itself, and performing calculations to determine legal moves*/
+    var Table = (function (PlayerId) {
+        "use strict";
+        var board = twoDarray(8, 8);
+        var id = PlayerId;
+        //initialising the board and entry pointers
+        var i, j;
+        for (i = 0; i <= 7; i++) {
+            for (j = 0; j <= 7;  j++) {
+                if (start()[i][j] >= 0) {
+                    board[i][j] = new Entry(i, j, start()[i][j]);
+                } else {
+                    board[i][j] = null;
+                }
+            }
+        }
+        var i, j;
+        for (i = 0; i <= 7; i++) {
+            for (j = 0; j <= 7;  j++) {
+                if (start()[i][j] >= 0) {
+                    if (i - 1 >= 0 && j - 1 >= 0) {
+                        board[i][j].setPointer(0, board[i - 1][j - 1]);
+                    } else {
+                        board[i][j].setPointer(0, null);
+                    }
+                    if (i - 1 >= 0 && j + 1<= 7) {
+                        board[i][j].setPointer(1, board[i - 1][j + 1]);
+                    } else {
+                        board[i][j].setPointer(1, null);
+                    }
+                    if (i + 1 <= 7 && j - 1 >= 0) {
+                        board[i][j].setPointer(2, board[i + 1][j - 1]);
+                    } else {
+                        board[i][j].setPointer(2, null);
+                    }
+                    if (i + 1<= 7 && j + 1<= 7) {
+                        board[i][j].setPointer(3, board[i + 1][j + 1]);
+                    } else {
+                        board[i][j].setPointer(3, null);
+                    }
+                } else {
+                    board[i][j] = null;
+                }
+            }
+        }
+        console.log(board);
+        return {
+            //function that returns an array with all entries with legal moves
+            legallist: function () {
+                console.log("started")
+                var hitlist = [], movelist = [];
+                board.forEach(function (element) {
+                    element.forEach(function (entry) {
+                        if (entry !== null && entry.getValue() === id) {
+                            console.log("entry accepted", entry);
+                            if (entry.legalMoves(id).length > 1) {
+                                if (entry.legalMoves(id)[0] === 0) {
+                                    movelist.push(entry);
+                                    console.log("pushed on movelist")
+                                }
+                                if (entry.legalMoves(id)[0] === 1) {
+                                    hitlist.push(entry);
+                                    console.log("pushed on hitlist")
+                                }
                             }
                         }
-                    }
+                    });
                 });
+                if (hitlist.length > 0) {
+                    return hitlist;
+                }
+                return movelist;
+            },
+            move: function (entry, location) {
+                entry.setValue(0);
+                location.setValue = id;
+            },
+            capture: function (entry, location){
+                entry.setValue(0);
+                var i, route = [];
+                if(!Array.isArray(location)){
+                    location = [location];
+                }
+                location.forEach(function(element){
+                    if(element instanceof Entry){
+                        route.push(element);
+                    }
+                })
+
+                for(i = 0; i < route.length; i++){
+                    console.log((route[i].getRow() + entry.getRow()) / 2, (route[i].getCollumn() + entry.getCollumn()) / 2)
+                    Table[(route[i].getRow() + entry.getRow()) / 2][(route[i].getCollumn() + entry.getCollumn()) / 2].setValue(0);
+                    entry = route[i];
+                }
+                entry.setValue(id);
+            },
+            getBoard: function(){
+                console.log("Board requested");
+                return board;
+            },
+            getId: function(){
+                return id;
+            }
+        };
+    }(1));
+
+    function onlyUnique(arr) { 
+        var ret=[];
+        arr.forEach(function(elements){
+            if(ret.indexOf(elements) == -1){
+                ret.push(elements);
+            }
+        })
+        return ret;
+    }
+
+    function flatten(arr) {
+        return arr.reduce(function (flat, toFlatten) {
+        return flat.concat(Array.isArray(toFlatten) ? flatten(toFlatten) : toFlatten);
+        }, []);
+    }
+    function determinelast(arr, entry){
+        if(arr.indexOf(entry)==-1){
+            arr.forEach(function(element){
+                if(Array.isArray(element)){
+                    return determinelast(element, entry);
+                }
             });
-            if (hitlist.length > 0) {
-                return hitlist;
+        }
+        else{
+            return arr;
+        }
+    }
+    function getTable(){
+        console.log("table requested");
+        var table = twoDarray(8,8), i, j;
+        for(i = 0; i <= 7; i++){
+            for(j = 0; j <= 7; j++){
+            table[i][j] = $("tr.row"+(i+1)).find("#"+(j+1));
             }
-            return movelist;
-        },
-        move: function (entry, location) {
-            entry.setValue(0);
-            location.setValue = this.id;
-        },
-        capture: function (entry, location){
-            entry.setValue(0);
-            var i;
-            if(!Array.isArray(location)){
-                location = [location];
+        }
+        return table;
+    }
+    function updatetable(){
+        console.log("update started");
+        var table = getTable();
+        var board = Table.getBoard();
+        for(i = 0; i <= 7; i++){
+            for(j = 0; j <= 7; j++){
+            if(board[i][j] != null){
+                console.log(board[i][j].getValue());
+                console.log(table[i][j]);
+                switch(board[i][j].getValue()){
+                    case 0: 
+                    table[i][j].empty();
+                    table[i][j].append("<br>");
+                    break;
+                    case 1:
+                    table[i][j].empty();
+                    table[i][j].append("<img src ='../public/images/untitled.png'>");
+                    break;
+                    case 2:
+                    table[i][j].empty();
+                    table[i][j].append("<img src ='../public/images/checkers black.png'>");
+                    break;
+                }
             }
-            for(i = 0; i < location.length; i++){
-                this.table[(entry.getRow() + location[i].getRow()) / 2][(entry.getCollumn() + location[i].getCollumn()) / 2].setValue(0);
-                entry = location[i];
             }
-            entry.value(this.id);
-        },
-        getBoard: function(){
-            return this.board;
+        }
+        hlLegalpiece();
+    }
+
+    function hlLegalpiece(){
+        var table = getTable(), legalPieces = Table.legallist(), board = Table.getBoard();
+        console.log(Table.legallist());
+        legalPieces.forEach(function(element){
+            switch(board[element.getRow()][element.getCollumn()]){
+                case 1:
+                table[element.getRow()][element.getCollumn()].empty();
+                table[element.getRow()][element.getCollumn()].append("<img src = '../public/images/Checkers red legal.png'>");
+                break;
+                case 2:
+                table[element.getRow()][element.getCollumn()].empty();
+                table[element.getRow()][element.getCollumn()].append("<img src = '../public/images/Checkers Black legal.png'>");
+                break;
+            }
+            $(".row"+element.getRow()+" #"+element.getCollumn()).click(function(){
+                showMoves(element);}
+                );
+        });
+    }
+
+    function showMoves(element){
+        var table = getTable(), highlight = element.legalMoves(Table.getId());
+        flatten(highlight);
+        highlight = onlyUnique(highlight);
+        console.log(highlight);
+        highlight.forEach(function(entry){
+            if(entry instanceof Entry){
+            console.log(entry);
+            table[entry.getRow()][entry.getCollumn()].empty();
+            table[entry.getRow()][entry.getCollumn()].append("<img src = '../public/images/legal.png'>");
+            $(".row"+entry.getRow()+" #"+entry.getCollumn()).click(function(){
+                move(element,entry);});
+            }
+        });
+        
+    }
+
+    function move(element,entry){
+        console.log(element);
+        var path = determinelast(element.legalMoves(Table.getId()), entry);
+        console.log(element.legalMoves(Table.getId()), "element");
+        if(element.legalMoves(Table.getId())[0] === 0){
+            console.log("you rule")
+            Table.move(element, entry);
+        } else{
+            console.log("you suck")
+            Table.capture(element, path);
         }
     };
-})(1);
+    updatetable();
+})

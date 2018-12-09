@@ -24,12 +24,12 @@
 }
 table{
     position: absolute;
-    transform: translate(2px,9px);
+    transform: translate(2px,14px);
 
 }
 table.pieces tr th{
-    width:62.5px;
-    height: 61px;
+    width:70px;
+    height: 58.4px;
 }
 #footer-text{
     text-align: center;
