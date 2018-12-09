@@ -8,20 +8,6 @@ function twoDarray(x, y) {
     return ret;
 }
 
-/* function for reducing an array of arrays of ... to an array of arrays */
-function flatten(arr){
-    "use strict";
-    arr.forEach(function(element){
-        if(Array.isArray(element)){
-            element.forEach(function(element2){
-                arr.push(element2);
-                arr.splice(arr.indexOf(element), 1);
-                flatten(element);
-            });
-        }
-    });
-}
-
 var start = function (){
     "use strict";
     var ret = twoDarray(8, 8), i, j;
@@ -69,7 +55,7 @@ Entry.prototype.legalMoves = function () {
         }
     } else {
         ret[0] = 1;
-        ret = flatten(this.legalHits(this.value));
+        ret = this.legalHits(this.value);
     }
     return ret;
 };
@@ -152,20 +138,20 @@ var Table = (function (PlayerId) {
             return movelist;
         },
         move: function (entry, location) {
-            entry.setValue = 0;
+            entry.setValue(0);
             location.setValue = this.id;
         },
         capture: function (entry, location){
-            entry.setValue = 0;
+            entry.setValue(0);
             var i;
             if(!Array.isArray(location)){
                 location = [location];
             }
             for(i = 0; i < location.length; i++){
-                this.table[(entry.getRow() + location[i].getRow()) / 2][(entry.getCollumn() + location[i].getCollumn()) / 2].value = 0;
+                this.table[(entry.getRow() + location[i].getRow()) / 2][(entry.getCollumn() + location[i].getCollumn()) / 2].setValue(0);
                 entry = location[i];
             }
-            entry.value = this.id;
+            entry.value(this.id);
         },
         getBoard: function(){
             return this.board;
