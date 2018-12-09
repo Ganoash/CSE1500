@@ -55,17 +55,17 @@ Entry.prototype.getValue = function () {"use strict"; return this.value; };
 Entry.prototype.setValue = function (value) {"use strict"; this.value = value; };
 Entry.prototype.setPointer = function (index, pointer) {"use strict"; this.pointers[index] = pointer; };
 Entry.prototype.getPointer = function (index) {"use strict"; return this.pointers[index]; };
-//function for determining wether a entry has legal moves
+//function for determining wether an entry has legal moves
 Entry.prototype.legalMoves = function () {
     "use strict";
     var ret = new Array(1);
     ret[0] = 0;
     if (this.legalHits(this.value).length === 0) {
-        if (this.pointers[0] === 0) {
-            ret.push(this.pointers[0]);
+        if (this.getPointer(0).value === 0) {
+            ret.push(this.getPointer(0).value);
         }
-        if (this.pointers[1] === 0) {
-            ret.push(this.pointers[1]);
+        if (this.getPointer(1).value === 0) {
+            ret.push(this.getPointer(1).value);
         }
     } else {
         ret[0] = 1;
@@ -73,16 +73,18 @@ Entry.prototype.legalMoves = function () {
     }
     return ret;
 };
-
+//function for determining wether an entry has legal captures
 Entry.prototype.legalHits = function (value) {
     "use strict";
     var ret = [], n;
     for (n = 0; n <= 1; n + 1) {
-        if (this.pointers[n] !== 0 && this.pointers[n] !== value) {
-            if (this.pointers[n].pointers[n] !== null && this.pointers[n].pointers[n] === 0) {
-                ret.push(this.pointers[n].pointers[n]);
-                if (this.pointers[n].pointers[n].legalHits(value).length > 0) {
-                    ret.push(this.pointers[n].pointers[n].legalHits(value));
+        if (this.getPointer(n) != null && this.getPointer(n).value !== 0 && this.getPointer(n).value !== value) {
+            if (this.getPointer(n).getPointer(n).value !== null && this.getPointer(n).getPointer(n).value === 0) {
+                //push the piece end position on the array
+                ret.push(this.getPointer(n).getPointer(n));
+                //check if a second piece can be captured if so push that end location on the array
+                if (this.getPointer(n).getPointer(n).legalHits(value).length > 0) {
+                    ret.push(this.getPointer(n).getPointer(n).legalHits(value));
                 }
             }
         }
@@ -164,6 +166,9 @@ var Table = (function (PlayerId) {
                 entry = location[i];
             }
             entry.value = this.id;
+        },
+        getBoard: function(){
+            return this.board;
         }
     };
 })(1);
