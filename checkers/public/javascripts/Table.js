@@ -33,7 +33,7 @@ $(document).ready(function(){
             for (j = 0; j <= 7; j++) {
                 if ((i + j) % 2 === 1) {
                     ret[i][j] = -1;
-                } else if ((i <= 2 && i!== 1) || i === 4) {
+                } else if (i <= 2) {
                     ret[i][j] = 1;
                 } else if (i >= 5) {
                     ret[i][j] = 2;
