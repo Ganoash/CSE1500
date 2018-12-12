@@ -368,7 +368,7 @@ $(document).ready(function(){
         if(event.data.element.legalMoves(Table.getId()).indexOf(event.data.entry)===(-1)){
         var path = determinelast(event.data.element.legalMoves(Table.getId()), event.data.entry);
         } else {
-            path = [entry];
+            path = [event.data.entry];
         }
         console.log(event.data.element.legalMoves(Table.getId()), path, event.data.entry);
         if(event.data.element.legalMoves(Table.getId())[0] === 0){
