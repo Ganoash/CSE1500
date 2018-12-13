@@ -288,11 +288,11 @@ $(document).ready(function(){
                     break;
                     case 1:
                     table[i][j].empty();
-                    table[i][j].append("<img src ='../public/images/untitled.png'>");
+                    table[i][j].append("<img src ='../images/untitled.png'>");
                     break;
                     case 2:
                     table[i][j].empty();
-                    table[i][j].append("<img src ='../public/images/checkers black.png'>");
+                    table[i][j].append("<img src ='../images/checkers black.png'>");
                     break;
                 }
             }
@@ -308,11 +308,11 @@ $(document).ready(function(){
             switch(board[element.getRow()][element.getCollumn()].getValue()){
                 case 1:
                 table[element.getRow()][element.getCollumn()].empty();
-                table[element.getRow()][element.getCollumn()].append("<img src = '../public/images/Checkers red legal.png'>");
+                table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers red legal.png'>");
                 break;
                 case 2:
                 table[element.getRow()][element.getCollumn()].empty();
-                table[element.getRow()][element.getCollumn()].append("<img src = '../public/images/Checkers Black legal.png'>");
+                table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers Black legal.png'>");
                 break;
             }
             table[element.getRow()][element.getCollumn()].on("click",{
@@ -331,7 +331,7 @@ $(document).ready(function(){
             if(entry instanceof Entry){
            // console.log(entry);
             table[entry.getRow()][entry.getCollumn()].empty();
-            table[entry.getRow()][entry.getCollumn()].append("<img src = '../public/images/legal.png'>");
+            table[entry.getRow()][entry.getCollumn()].append("<img src = '../images/legal.png'>");
             table[entry.getRow()][entry.getCollumn()].on("click",{
                 element: event.data.element,
                 entry: entry
