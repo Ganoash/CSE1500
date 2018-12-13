@@ -1,19 +1,37 @@
-var createError = require('http-errors');
+
 var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
 var http = require('http');
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var websocket = require('ws');
+var messages = require("./public/javascripts/message.js")
 
 var app = express();
-var port = process.argv[2];
+const port = process.argv[2];
+
+//use static files
 app.use(express.static(__dirname + "/public"))
+//give index
 app.get("/", function(req, res){
   res.sendFile("game.html", {root: "./public"});
 });
 
-http.createServer(app).listen(port);
+var server = http.createServer(app);
+const wss = new websocket.Server({server});
 
-module.exports = app;
+var websocket = {};
+
+setInterval(function(){
+  for(let i in websocket){
+    if(websocket.hasOwnProperty(i)){
+      let obj = websocket[i];
+
+      if(obj.finalSatus = null){
+        delete websocket[i];
+      }
+    }
+  }
+}, 50000);
+
+wss.on("connection", function(ws){
+
+});
+server.listen(port);

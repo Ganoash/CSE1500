@@ -1,4 +1,4 @@
-$(document).ready(function(){
+
     function treeify(arr){
         ret = [];
         arr.forEach(function(element){
@@ -224,161 +224,161 @@ $(document).ready(function(){
             }
         };
     }(2));
-
-    function onlyUnique(arr) { 
-        var ret=[];
-        arr.forEach(function(elements){
-            if(ret.indexOf(elements) == -1){
-                ret.push(elements);
-            }
-        })
-        return ret;
-    }
-
-    function flatten(arr) {
-        var ret = [];
-        arr.forEach(function(element){
-            if(Array.isArray(element)){
-                ret= ret.concat(flatten(element));
+    $(document).ready(function(){
+        function onlyUnique(arr) { 
+            var ret=[];
+            arr.forEach(function(elements){
+                if(ret.indexOf(elements) == -1){
+                    ret.push(elements);
+                }
+            })
+            return ret;
+        }
+        
+        function flatten(arr) {
+            var ret = [];
+            arr.forEach(function(element){
+                if(Array.isArray(element)){
+                    ret= ret.concat(flatten(element));
+                }
+                else{
+                    ret.push(element);
+                }
+            });
+            return ret;
+        }
+        function determinelast(arr, entry){
+            var i;
+            console.log(arr.indexOf(entry), entry, "began")
+            if(arr.indexOf(entry)!==(arr.length-1)){
+                for(i = 0; i < arr.length; i++){
+                    if(Array.isArray(arr[i])){
+                        console.log(arr[i], "recursion");
+                        return determinelast(arr[i], entry);
+                    }
+                }
             }
             else{
-                ret.push(element);
+                console.log(arr, "returned");
+                return arr;
             }
-        });
-        return ret;
-    }
-    function determinelast(arr, entry){
-        var i;
-        console.log(arr.indexOf(entry), entry, "began")
-        if(arr.indexOf(entry)!==(arr.length-1)){
-            for(i = 0; i < arr.length; i++){
-                if(Array.isArray(arr[i])){
-                    console.log(arr[i], "recursion");
-                    return determinelast(arr[i], entry);
+        }
+        function getTable(){
+            //console.log("table requested");
+            var table = twoDarray(8,8), i, j;
+            for(i = 0; i <= 7; i++){
+                for(j = 0; j <= 7; j++){
+                table[i][j] = $("tr.row"+(i+1)).find("#"+(j+1));
                 }
             }
+            return table;
         }
-        else{
-            console.log(arr, "returned");
-            return arr;
-        }
-    }
-    function getTable(){
-        //console.log("table requested");
-        var table = twoDarray(8,8), i, j;
-        for(i = 0; i <= 7; i++){
-            for(j = 0; j <= 7; j++){
-            table[i][j] = $("tr.row"+(i+1)).find("#"+(j+1));
+        function updatetable(){
+            //console.log("update started");
+            var table = getTable();
+            var board = Table.getBoard();
+            for(i = 0; i <= 7; i++){
+                for(j = 0; j <= 7; j++){
+                if(board[i][j] != null){
+                    table[i][j].off()
+                    switch(board[i][j].getValue()){
+                        case 0: 
+                        table[i][j].empty();
+                        table[i][j].append("<br>");
+                        break;
+                        case 1:
+                        table[i][j].empty();
+                        table[i][j].append("<img src ='../images/untitled.png'>");
+                        break;
+                        case 2:
+                        table[i][j].empty();
+                        table[i][j].append("<img src ='../images/checkers black.png'>");
+                        break;
+                    }
+                }
+                }
             }
+            hlLegalpiece();
         }
-        return table;
-    }
-    function updatetable(){
-        //console.log("update started");
-        var table = getTable();
-        var board = Table.getBoard();
-        for(i = 0; i <= 7; i++){
-            for(j = 0; j <= 7; j++){
-            if(board[i][j] != null){
-                table[i][j].off()
-                switch(board[i][j].getValue()){
-                    case 0: 
-                    table[i][j].empty();
-                    table[i][j].append("<br>");
-                    break;
+        
+        function hlLegalpiece(){
+            var table = getTable(), legalPieces = Table.legallist(), board = Table.getBoard();
+           // console.log(Table.legallist());
+            legalPieces.forEach(function(element){
+                switch(board[element.getRow()][element.getCollumn()].getValue()){
                     case 1:
-                    table[i][j].empty();
-                    table[i][j].append("<img src ='../images/untitled.png'>");
+                    table[element.getRow()][element.getCollumn()].empty();
+                    table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers red legal.png'>");
                     break;
                     case 2:
-                    table[i][j].empty();
-                    table[i][j].append("<img src ='../images/checkers black.png'>");
+                    table[element.getRow()][element.getCollumn()].empty();
+                    table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers Black legal.png'>");
                     break;
                 }
-            }
-            }
-        }
-        hlLegalpiece();
-    }
-
-    function hlLegalpiece(){
-        var table = getTable(), legalPieces = Table.legallist(), board = Table.getBoard();
-       // console.log(Table.legallist());
-        legalPieces.forEach(function(element){
-            switch(board[element.getRow()][element.getCollumn()].getValue()){
-                case 1:
-                table[element.getRow()][element.getCollumn()].empty();
-                table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers red legal.png'>");
-                break;
-                case 2:
-                table[element.getRow()][element.getCollumn()].empty();
-                table[element.getRow()][element.getCollumn()].append("<img src = '../images/Checkers Black legal.png'>");
-                break;
-            }
-            table[element.getRow()][element.getCollumn()].on("click",{
-                element: element
-            }, showMoves);
-    });
-}
-
-    function showMoves(event){
-        var table = getTable(), highlight = event.data.element.legalMoves(Table.getId());
-        highlight = flatten(highlight);
-        console.log("Flattend:",highlight);
-        highlight = onlyUnique(highlight);
-       // console.log(highlight);
-        highlight.forEach(function(entry){
-            if(entry instanceof Entry){
-           // console.log(entry);
-            table[entry.getRow()][entry.getCollumn()].empty();
-            table[entry.getRow()][entry.getCollumn()].append("<img src = '../images/legal.png'>");
-            table[entry.getRow()][entry.getCollumn()].on("click",{
-                element: event.data.element,
-                entry: entry
-            }, move);
-            table[event.data.element.getRow()][event.data.element.getCollumn()].off("click", showMoves);
-            table[event.data.element.getRow()][event.data.element.getCollumn()].on("click",{
-                element: event.data.element
-            }, hideMoves);
-
-    }
-});
-}   
-    function hideMoves(event){
-        var table = getTable(), highlight = event.data.element.legalMoves(Table.getId());
-        highlight = flatten(highlight);
-        highlight = onlyUnique(highlight);
-       // console.log(highlight);
-        highlight.forEach(function(entry){
-            if(entry instanceof Entry){
-           // console.log(entry);
-            table[entry.getRow()][entry.getCollumn()].empty();
-            table[entry.getRow()][entry.getCollumn()].append("<br>");
-            table[entry.getRow()][entry.getCollumn()].off("click", move);
-            table[event.data.element.getRow()][event.data.element.getCollumn()].on("click",{
-                element: event.data.element
-            }, showMoves);
-            table[event.data.element.getRow()][event.data.element.getCollumn()].off("click", hideMoves);
-            }
+                table[element.getRow()][element.getCollumn()].on("click",{
+                    element: element
+                }, showMoves);
         });
-    }
-
-    function move(event){
-        console.log(event.data.element.legalMoves(Table.getId()).indexOf(event.data.entry)===(-1));
-        if(event.data.element.legalMoves(Table.getId()).indexOf(event.data.entry)===(-1)){
-        var path = determinelast(event.data.element.legalMoves(Table.getId()), event.data.entry);
-        } else {
-            path = [event.data.entry];
         }
-        console.log(event.data.element.legalMoves(Table.getId()), path, event.data.entry);
-        if(event.data.element.legalMoves(Table.getId())[0] === 0){
-           // console.log("you rule")
-            Table.move(event.data.element, event.data.entry);
-        } else{
-            console.log("hit run")
-            Table.capture(event.data.element, path);
+        
+        function showMoves(event){
+            var table = getTable(), highlight = event.data.element.legalMoves(Table.getId());
+            highlight = flatten(highlight);
+            console.log("Flattend:",highlight);
+            highlight = onlyUnique(highlight);
+           // console.log(highlight);
+            highlight.forEach(function(entry){
+                if(entry instanceof Entry){
+               // console.log(entry);
+                table[entry.getRow()][entry.getCollumn()].empty();
+                table[entry.getRow()][entry.getCollumn()].append("<img src = '../images/legal.png'>");
+                table[entry.getRow()][entry.getCollumn()].on("click",{
+                    element: event.data.element,
+                    entry: entry
+                }, move);
+                table[event.data.element.getRow()][event.data.element.getCollumn()].off("click", showMoves);
+                table[event.data.element.getRow()][event.data.element.getCollumn()].on("click",{
+                    element: event.data.element
+                }, hideMoves);
+        
         }
+        });
+        }   
+        function hideMoves(event){
+            var table = getTable(), highlight = event.data.element.legalMoves(Table.getId());
+            highlight = flatten(highlight);
+            highlight = onlyUnique(highlight);
+           // console.log(highlight);
+            highlight.forEach(function(entry){
+                if(entry instanceof Entry){
+               // console.log(entry);
+                table[entry.getRow()][entry.getCollumn()].empty();
+                table[entry.getRow()][entry.getCollumn()].append("<br>");
+                table[entry.getRow()][entry.getCollumn()].off("click", move);
+                table[event.data.element.getRow()][event.data.element.getCollumn()].on("click",{
+                    element: event.data.element
+                }, showMoves);
+                table[event.data.element.getRow()][event.data.element.getCollumn()].off("click", hideMoves);
+                }
+            });
+        }
+        
+        function move(event){
+            console.log(event.data.element.legalMoves(Table.getId()).indexOf(event.data.entry)===(-1));
+            if(event.data.element.legalMoves(Table.getId()).indexOf(event.data.entry)===(-1)){
+            var path = determinelast(event.data.element.legalMoves(Table.getId()), event.data.entry);
+            } else {
+                path = [event.data.entry];
+            }
+            console.log(event.data.element.legalMoves(Table.getId()), path, event.data.entry);
+            if(event.data.element.legalMoves(Table.getId())[0] === 0){
+               // console.log("you rule")
+                Table.move(event.data.element, event.data.entry);
+            } else{
+                console.log("hit run")
+                Table.capture(event.data.element, path);
+            }
+            updatetable();
+        };
         updatetable();
-    };
-    updatetable();
-})
+        });
