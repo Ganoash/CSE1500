@@ -21,7 +21,6 @@ const wss = new websocket.Server({server});
 var websocket = {};
 var connectionid = 0;
 var currGame = new Game();
-console.log(currGame)
 
 setInterval(function(){
   for(let i in websocket){
@@ -39,18 +38,16 @@ wss.on("connection", function(ws){
   var con = ws;
   con.id = connectionid++;
   player = currGame.addPlayer(con);
-  websocket[con.id] = currGame;
-
-  con.send((player == "1") ? messages.S_SET_PLAYER_1 : messages.S_SET_PLAYER_2);
   console.log(player)
+  websocket[con.id] = currGame;
+  var isPlayer1 = (con === currGame.player1)
+  con.send((player == "1") ? messages.S_SET_PLAYER_1 : messages.S_SET_PLAYER_2);
   if(currGame.hasTwoConnectedPlayers()){
     currGame.player1.send(messages.S_YOUR_TURN);
-    currGame = new Game();
+    currGame = new Game(connectionid++);
   }
-  wss.on("message", function incoming(message){
-    console.log(message);
+  con.on("message", function incoming(message){
     var oMSG = JSON.parse(message);
-    var isPlayer1 = (player == "1");
     var gameObj = websocket[con.id];
     if(isPlayer1){
       if(oMSG.type === messages.T_MOVE_MADE){
@@ -69,7 +66,6 @@ wss.on("connection", function(ws){
     }
     else{
       if(oMSG.type === messages.T_MOVE_MADE){
-        console.log("move made by server");
         gameObj.player1.send(message);
         gameObj.setState("1 MOVE");
       }
@@ -83,10 +79,10 @@ wss.on("connection", function(ws){
       }
     }
   })
-  wss.on("close", function(code){
+  con.on("close", function(code){
     var gameObj = websocket[con.id];
     if(code == "1001"){
-      if(gameObj.isValidTransition("ABORTED")){
+      if(gameObj.isValidTransition(gameObj.gameState, "ABORTED")){
         gameObj.setState("ABORTED");
       }
     }

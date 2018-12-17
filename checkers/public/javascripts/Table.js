@@ -1,12 +1,14 @@
-console.log("run");
+//console.log("run");
 function treeify(arr) {
   ret = [
   ];
   arr.forEach(function (element) {
     if (Array.isArray(element)) {
+        var i = 0;
       element.forEach(function (entry) {
-        ret.push([arr[0],
-        entry])
+        ret.push([arr[i],
+        entry]);
+        i++;
       });
     }
   });
@@ -27,20 +29,23 @@ function convertToObject(board){
         }
         ret[i] = temp;
     }
+    ret.type = Messages.T_MOVE_MADE;
     return ret;
 }
 function convertFromObject(start){
     if(!Array.isArray(start)){
         temp = [];
         for (i in start) {
-            temp.push(start[i])
+            if(i != Messages.T_MOVE_MADE){
+                temp.push(start[i])
+            }
         }
     }
     var i,j, board = twoDarray(8, 8);
     for (i = 0; i <= 7; i++) {
       for (j = 0; j <= 7; j++) {
-        if (start() [i][j] >= 0) {
-          board[i][j] = new Entry(i, j, start() [i][j]);
+        if (start [i][j] >= 0) {
+          board[i][j] = new Entry(i, j, start[i][j]);
         } else {
           board[i][j] = null;
         }
@@ -49,7 +54,7 @@ function convertFromObject(start){
     var i,j;
     for (i = 0; i <= 7; i++) {
       for (j = 0; j <= 7; j++) {
-        if (start() [i][j] >= 0) {
+        if (start [i][j] >= 0) {
           if (i - 1 >= 0 && j - 1 >= 0) {
             board[i][j].setPointer(0, board[i - 1][j - 1]);
           } else {
@@ -209,8 +214,11 @@ Entry.prototype.legalHits = function (value) {
 var Table = (function (PlayerId) {
   'use strict';
   console.log("tried");
-  var board = convertFromObject(start);
+  var board = convertFromObject(start());
   console.log(board);
+  var temp = convertToObject(board);
+  console.log(temp);
+  console.log(convertFromObject(temp));
   var id = PlayerId;
   var canMove = false;
   var p1piecesCaptured = 0;
@@ -252,7 +260,9 @@ var Table = (function (PlayerId) {
       //console.log(entry);
       location.setValue(id);
       //console.log(board, "move started");
-      var msg = Messages.O_MOVE_MADE;
+      var msg = JSON.stringify(convertToObject(board));
+      console.log(msg);
+      socket.send(msg);
     },
     capture: function (entry, location) {
       console.log(entry, location);
@@ -276,9 +286,9 @@ var Table = (function (PlayerId) {
         entry = route[i];
       }
       entry.setValue(id);
-     
-      var msg = JSON.stringify(board);
-      socket.send(JSON.stringify(msg));
+      var msg = JSON.stringify(convertToObject(board));
+      console.log(msg);
+      socket.send(msg);
     },
     getBoard: function () {
       //console.log("Board requested");
@@ -506,7 +516,8 @@ $(document).ready(function () {
       }
       if (msg.type === Messages.T_MOVE_MADE) {
         Table.toggleCanMove();
-        Table.setBoard(JSON.parse(msg.data));
+        console.log(msg);
+        Table.setBoard(convertFromObject(msg));
         updatetable();
       }
     }

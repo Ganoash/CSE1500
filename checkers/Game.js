@@ -26,14 +26,15 @@ game.prototype.transitionMatrix = [
     [0, 0, 0, 0, 0, 0, 0, 0]    //ABORTED
 ];
 
-game.prototype.isValidTransistion = function(from, to){
+game.prototype.isValidTransition = function(from, to){
     let i,j;
     if(!(from in (this.transitionStates))|| !(to in (this.transitionStates))){
         return false;
     }
     else{
-        i= game.transitionStates[from];
-        j= game.transitionStates[to];
+        console.log(from, to)
+        i= this.transitionStates[from];
+        j= this.transitionStates[to];
     }
     return (game.prototype.transitionMatrix[i][j] > 0);
 }
@@ -50,7 +51,6 @@ game.prototype.setState = function(w){
 }
 
 game.prototype.addPlayer = function(p){
-    console.log(this.gameState)
     if(this.gameState !== "0 JOINT" && this.gameState !== "1 JOINT"){
         return Error("invalid call to addPlayer")
     }
@@ -62,10 +62,12 @@ game.prototype.addPlayer = function(p){
     }
     if(this.player1 == null){
         this.player1= p;
+        console.log("player 1");
         return "1";
     }
     else{
         this.player2 = p;
+        console.log("player 2")
         return "2";
     }
 }
