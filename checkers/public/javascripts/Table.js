@@ -1,4 +1,4 @@
-
+console.log("run");
 function treeify(arr) {
   ret = [
   ];
@@ -11,15 +11,78 @@ function treeify(arr) {
     }
   });
   return ret;
-}/* funtion for creating a 2D array*/
+}
+/* funtion for creating a 2D array*/
+function convertToObject(board){
+    var ret = {}
+    for (i = 0; i <= 7; i++) {
+        var temp = [];
+        for (j = 0; j <= 7; j++) {
+            if(board[i][j]===null){
+                temp.push(0);
+            }
+            else{
+                temp.push(board[i][j].getValue());
+            }
+        }
+        ret[i] = temp;
+    }
+    return ret;
+}
+function convertFromObject(start){
+    if(!Array.isArray(start)){
+        temp = [];
+        for (i in start) {
+            temp.push(start[i])
+        }
+    }
+    var i,j, board = twoDarray(8, 8);
+    for (i = 0; i <= 7; i++) {
+      for (j = 0; j <= 7; j++) {
+        if (start() [i][j] >= 0) {
+          board[i][j] = new Entry(i, j, start() [i][j]);
+        } else {
+          board[i][j] = null;
+        }
+      }
+    }
+    var i,j;
+    for (i = 0; i <= 7; i++) {
+      for (j = 0; j <= 7; j++) {
+        if (start() [i][j] >= 0) {
+          if (i - 1 >= 0 && j - 1 >= 0) {
+            board[i][j].setPointer(0, board[i - 1][j - 1]);
+          } else {
+            board[i][j].setPointer(0, null);
+          }
+          if (i - 1 >= 0 && j + 1 <= 7) {
+            board[i][j].setPointer(1, board[i - 1][j + 1]);
+          } else {
+            board[i][j].setPointer(1, null);
+          }
+          if (i + 1 <= 7 && j - 1 >= 0) {
+            board[i][j].setPointer(2, board[i + 1][j - 1]);
+          } else {
+            board[i][j].setPointer(2, null);
+          }
+          if (i + 1 <= 7 && j + 1 <= 7) {
+            board[i][j].setPointer(3, board[i + 1][j + 1]);
+          } else {
+            board[i][j].setPointer(3, null);
+          }
+        } else {
+          board[i][j] = null;
+        }
+      }
+
+    }
+    return board;
+}
 
 function twoDarray(x, y) {
   'use strict';
   //console.log("2D array started");
-  var ret = [
-  ],
-  i,
-  j;
+  var ret = [],i,j;
   for (i = 0; i < x; i++) {
     var temp = [
     ]
@@ -32,9 +95,7 @@ function twoDarray(x, y) {
 }
 var start = function () {
   'use strict';
-  var ret = twoDarray(8, 8),
-  i,
-  j;
+  var ret = twoDarray(8, 8),i,j;
   /*initialising the array for the start values */
   for (i = 0; i <= 7; i++) {
     for (j = 0; j <= 7; j++) {
@@ -147,54 +208,14 @@ Entry.prototype.legalHits = function (value) {
 /* gameobject for the table itself, and performing calculations to determine legal moves*/
 var Table = (function (PlayerId) {
   'use strict';
-  var board = twoDarray(8, 8);
+  console.log("tried");
+  var board = convertFromObject(start);
+  console.log(board);
   var id = PlayerId;
   var canMove = false;
   var p1piecesCaptured = 0;
   var p2piecesCaptured = 0;
   var socket;
-  //initialising the board and entry pointers
-  var i,
-  j;
-  for (i = 0; i <= 7; i++) {
-    for (j = 0; j <= 7; j++) {
-      if (start() [i][j] >= 0) {
-        board[i][j] = new Entry(i, j, start() [i][j]);
-      } else {
-        board[i][j] = null;
-      }
-    }
-  }
-  var i,
-  j;
-  for (i = 0; i <= 7; i++) {
-    for (j = 0; j <= 7; j++) {
-      if (start() [i][j] >= 0) {
-        if (i - 1 >= 0 && j - 1 >= 0) {
-          board[i][j].setPointer(0, board[i - 1][j - 1]);
-        } else {
-          board[i][j].setPointer(0, null);
-        }
-        if (i - 1 >= 0 && j + 1 <= 7) {
-          board[i][j].setPointer(1, board[i - 1][j + 1]);
-        } else {
-          board[i][j].setPointer(1, null);
-        }
-        if (i + 1 <= 7 && j - 1 >= 0) {
-          board[i][j].setPointer(2, board[i + 1][j - 1]);
-        } else {
-          board[i][j].setPointer(2, null);
-        }
-        if (i + 1 <= 7 && j + 1 <= 7) {
-          board[i][j].setPointer(3, board[i + 1][j + 1]);
-        } else {
-          board[i][j].setPointer(3, null);
-        }
-      } else {
-        board[i][j] = null;
-      }
-    }
-  }  //console.log(board);
 
   return {
     //function that returns an array with all entries with legal moves
@@ -232,8 +253,6 @@ var Table = (function (PlayerId) {
       location.setValue(id);
       //console.log(board, "move started");
       var msg = Messages.O_MOVE_MADE;
-      msg.data = table;
-      socket.send(JSON.stringify(msg));
     },
     capture: function (entry, location) {
       console.log(entry, location);
@@ -257,9 +276,8 @@ var Table = (function (PlayerId) {
         entry = route[i];
       }
       entry.setValue(id);
-
-      var msg = Messages.O_MOVE_MADE;
-      msg.data = table;
+     
+      var msg = JSON.stringify(board);
       socket.send(JSON.stringify(msg));
     },
     getBoard: function () {
@@ -460,7 +478,7 @@ $(document).ready(function () {
         event.data.entry
       ];
     }
-    console.log(event.data.element.legalMoves(Table.getId()), path, event.data.entry);
+    //console.log(event.data.element.legalMoves(Table.getId()), path, event.data.entry);
     if (event.data.element.legalMoves(Table.getId()) [0] === 0) {
       // console.log("you rule")
       Table.move(event.data.element, event.data.entry);
@@ -484,10 +502,11 @@ $(document).ready(function () {
       }
       if (msg.type === Messages.T_YOUR_TURN) {
         Table.toggleCanMove();
+        updatetable();
       }
       if (msg.type === Messages.T_MOVE_MADE) {
         Table.toggleCanMove();
-        Table.setBoard(msg.data);
+        Table.setBoard(JSON.parse(msg.data));
         updatetable();
       }
     }

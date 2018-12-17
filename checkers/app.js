@@ -44,10 +44,11 @@ wss.on("connection", function(ws){
   con.send((player == "1") ? messages.S_SET_PLAYER_1 : messages.S_SET_PLAYER_2);
   console.log(player)
   if(currGame.hasTwoConnectedPlayers()){
-    currGame = new Game();
     currGame.player1.send(messages.S_YOUR_TURN);
+    currGame = new Game();
   }
   wss.on("message", function incoming(message){
+    console.log(message);
     var oMSG = JSON.parse(message);
     var isPlayer1 = (player == "1");
     var gameObj = websocket[con.id];
@@ -68,6 +69,7 @@ wss.on("connection", function(ws){
     }
     else{
       if(oMSG.type === messages.T_MOVE_MADE){
+        console.log("move made by server");
         gameObj.player1.send(message);
         gameObj.setState("1 MOVE");
       }
