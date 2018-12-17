@@ -1,0 +1,61 @@
+<html>
+
+<head> 
+
+</head>
+
+<body>
+<script>
+var gameStatModule = ( function() {
+
+    /* private members */
+    var gamesStarted = 0;
+    var gamesCompleted = 0;
+    var gamesAbolished = 0;
+    var score1;
+    var score2;
+    var gameswon1 = 0;
+    var gameswon2 = 0;
+
+    /* public members: return accessible object */
+    return {
+        PlayerWins: function(){
+        if(score1 > score2){
+        gameswon1++:
+        }
+        else if(score1 < score2){
+        gameswon2++;
+        }
+        }
+
+
+        TraceTime : function(){
+            var output = "";
+            console.time("Time Played");
+            //This is where the execution should be
+            console.timeEnd("Time Played");
+        }
+
+        incrGamesStarted : function(){
+            gamesStarted++;
+        },
+        getNumGamesStarted : function(){
+            return gamesStarted;
+        }
+    }
+})();
+
+/* using the module */
+gameStatModule.incrGamesStarted();
+console.log( gameStatModule.getNumGamesStarted() ); //prints out "1"
+console.log( gameStatModule.gamesStarted ); //prints out "undefined"
+console.log( gameStatModule.TraceTime);
+
+
+
+
+</script>
+</body>
+
+
+</html>
