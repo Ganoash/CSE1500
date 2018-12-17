@@ -473,11 +473,13 @@ $(document).ready(function () {
   };
   (function setup() {
     var socket = new WebSocket('ws://localhost:3000/');
-    console.log("fired!")
     updatetable();
     socket.onmessage = function (event) {
+      console.log(event);
       var msg = JSON.parse(event.data);
+      console.log(msg)
       if (msg.type === Messages.T_SET_PLAYER) {
+          console.log("id set")
         Table.setId(parseInt(msg.data));
       }
       if (msg.type === Messages.T_YOUR_TURN) {

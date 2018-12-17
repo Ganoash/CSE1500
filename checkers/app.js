@@ -21,6 +21,7 @@ const wss = new websocket.Server({server});
 var websocket = {};
 var connectionid = 0;
 var currGame = new Game();
+console.log(currGame)
 
 setInterval(function(){
   for(let i in websocket){
@@ -43,10 +44,8 @@ wss.on("connection", function(ws){
   con.send((player == "1") ? messages.S_SET_PLAYER_1 : messages.S_SET_PLAYER_2);
   console.log(player)
   if(currGame.hasTwoConnectedPlayers()){
-    currGame = new game();
-    if(player == "1"){
-      con.send(messages.S_YOUR_TURN);
-    }
+    currGame = new Game();
+    currGame.player1.send(messages.S_YOUR_TURN);
   }
   wss.on("message", function incoming(message){
     var oMSG = JSON.parse(message);

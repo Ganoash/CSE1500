@@ -2,7 +2,7 @@ var game = function(gameId){
     this.id = gameId;
     this.player1 = null;
     this.player2 = null;
-    this.gameState = {};
+    this.gameState = "0 JOINT";
 }
 
 game.prototype.transitionStates = {};
@@ -50,11 +50,12 @@ game.prototype.setState = function(w){
 }
 
 game.prototype.addPlayer = function(p){
-    if(this.gameState != "0 Joint" && this.game != "1 JOINT"){
+    console.log(this.gameState)
+    if(this.gameState !== "0 JOINT" && this.gameState !== "1 JOINT"){
         return Error("invalid call to addPlayer")
     }
 
-    if(this.gameState == "0 Joint"){
+    if(this.gameState === "0 JOINT"){
         this.setState("1 JOINT")
     }else{
         this.setState("2 JOINT")
@@ -70,7 +71,7 @@ game.prototype.addPlayer = function(p){
 }
 
 game.prototype.hasTwoConnectedPlayers = function(){
-    if(this.player1 != null && this.player2 != null){
+    if(this.player1 !== null && this.player2 !== null){
         return true
     }
     return false;
