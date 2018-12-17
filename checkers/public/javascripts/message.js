@@ -5,32 +5,32 @@
         type: exports.T_GAME_WON_BY,
         data: null
     };
-    /*Server to client: game is aboretd */
+    /*Server to client: game is aborted */
     exports.O_GAME_ABORTED = {
         type: "GAME-ABORTED"
     }
-    exports.S_GAME_ABORTED = JSON.stringify(O_GAME_ABORTED);
+    exports.S_GAME_ABORTED = JSON.stringify(exports.O_GAME_ABORTED);
     
     /*Server to Client: your turn*/
     exports.T_YOUR_TURN ="YOUR-TURN";
     exports.O_YOUR_TURN= {
         type: exports.T_YOUR_TURN
     };
-    exports.S_YOUR_TURN = JSON.stringify(O_YOUR_TURN);
+    exports.S_YOUR_TURN = JSON.stringify(exports.O_YOUR_TURN);
     exports.T_SET_PLAYER = "SET-PLAYER";
     /*Server to Client: Set Player 1*/
     exports.O_SET_PLAYER_1= {
         type: exports.T_SET_PLAYER,
         data: 1
     }
-    exports.S_SET_PLAYER_1 = JSON.stringify(O_SET_PLAYER_1);
+    exports.S_SET_PLAYER_1 = JSON.stringify(exports.O_SET_PLAYER_1);
 
     /*Server to Client: set Player 2*/
     exports.O_SET_PLAYER_2= {
         type: exports.T_SET_PLAYER,
         data: 2
     }
-    exports.S_SET_PLAYER_2 = JSON.stringify(O_SET_PLAYER_2);
+    exports.S_SET_PLAYER_2 = JSON.stringify(exports.O_SET_PLAYER_2);
 
     /*Player to server or server to player: this move was made*/
     exports.T_MOVE_MADE= "MOVE-MADE";
@@ -42,7 +42,7 @@
     /*Player to server: list of legal moves*/
     exports.T_LEGAL_MOVES = "LEGAL_MOVES";
     exports.O_LEGAL_MOVES = {
-        type: T_LEGAL_MOVES,
+        type: exports.T_LEGAL_MOVES,
         data: null
     }
 

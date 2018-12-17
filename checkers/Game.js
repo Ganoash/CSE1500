@@ -75,3 +75,4 @@ game.prototype.hasTwoConnectedPlayers = function(){
     }
     return false;
 }
+module.exports = game;

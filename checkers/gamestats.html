@@ -21,12 +21,12 @@ var gameStatModule = ( function() {
     return {
         PlayerWins: function(){
         if(score1 > score2){
-        gameswon1++:
+        gameswon1++;
         }
         else if(score1 < score2){
         gameswon2++;
         }
-        }
+        },
 
 
         TraceTime : function(){
@@ -34,7 +34,7 @@ var gameStatModule = ( function() {
             console.time("Time Played");
             //This is where the execution should be
             console.timeEnd("Time Played");
-        }
+        },
 
         incrGamesStarted : function(){
             gamesStarted++;
