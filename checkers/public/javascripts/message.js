@@ -12,21 +12,22 @@
     exports.S_GAME_ABORTED = JSON.stringify(O_GAME_ABORTED);
     
     /*Server to Client: your turn*/
+    exports.T_YOUR_TURN ="YOUR-TURN";
     exports.O_YOUR_TURN= {
-        type: "YOUR-TURN"
+        type: exports.T_YOUR_TURN
     };
     exports.S_YOUR_TURN = JSON.stringify(O_YOUR_TURN);
-
+    exports.T_SET_PLAYER = "SET-PLAYER";
     /*Server to Client: Set Player 1*/
     exports.O_SET_PLAYER_1= {
-        type: "SET-PLAYER",
+        type: exports.T_SET_PLAYER,
         data: 1
     }
     exports.S_SET_PLAYER_1 = JSON.stringify(O_SET_PLAYER_1);
 
     /*Server to Client: set Player 2*/
     exports.O_SET_PLAYER_2= {
-        type: "SET-PLAYER",
+        type: exports.T_SET_PLAYER,
         data: 2
     }
     exports.S_SET_PLAYER_2 = JSON.stringify(O_SET_PLAYER_2);
@@ -35,8 +36,7 @@
     exports.T_MOVE_MADE= "MOVE-MADE";
     exports.O_MOVE_MADE= {
         type: exports.T_MOVE_MADE,
-        data: null,
-        player: null
+        data: null
     }
 
     /*Player to server: list of legal moves*/

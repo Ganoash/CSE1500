@@ -1,4 +1,4 @@
-
+    var messages = require("./message");
     function treeify(arr){
         ret = [];
         arr.forEach(function(element){
@@ -120,6 +120,10 @@
         "use strict";
         var board = twoDarray(8, 8);
         var id = PlayerId;
+        var canMove = false;
+        var p1piecesCaptured = 0;
+        var p2piecesCaptured = 0;
+        var socket;
         //initialising the board and entry pointers
         var i, j;
         for (i = 0; i <= 7; i++) {
@@ -193,6 +197,9 @@
                 //console.log(entry);
                 location.setValue(id);
                 //console.log(board, "move started");
+                var msg = messages.O_MOVE_MADE;
+                msg.data = table;
+                socket.send(JSON.stringify(msg));
             },
             capture: function (entry, location){
                 console.log(entry, location);
@@ -214,16 +221,53 @@
                     entry = route[i];
                 }
                 entry.setValue(id);
+                socket.send(JSON.stringify(msg));
             },
             getBoard: function(){
                 //console.log("Board requested");
                 return board;
             },
+            setBoard: function(b){
+                board = b;
+            },
             getId: function(){
                 return id;
+            },
+            setId: function(player){
+                id = player;
+            },
+            getCanMove: function(){
+                return canMove
+            },
+            toggleCanMove: function(){
+                canMove = !canMove
+            },
+            getP1PiecesCaptured: function(){
+                return p1piecesCaptured
+            },
+            getP2PiecesCaptured: function(){
+                return p2piecesCaptured
+            },
+            incrP1PiecesCaptured: function(){
+                p1piecesCaptured++
+            },
+            incrP2PiecesCaptured: function(){
+                p2piecesCaptured++
+            },
+            whoWon: function(){
+                if(p1piecesCaptured == 8){
+                    return 1;
+                }
+                if(p2piecesCaptured === 8){
+                    return 2;
+                }
+                return 0;
+            },
+            setSocket: function(sock){
+                socket = sock;
             }
         };
-    }(2));
+    }(0));
     $(document).ready(function(){
         function onlyUnique(arr) { 
             var ret=[];
@@ -273,7 +317,7 @@
             }
             return table;
         }
-        function updatetable(){
+            function updatetable(){
             //console.log("update started");
             var table = getTable();
             var board = Table.getBoard();
@@ -298,7 +342,9 @@
                 }
                 }
             }
+            if(table.canMove()){
             hlLegalpiece();
+            }
         }
         
         function hlLegalpiece(){
@@ -378,7 +424,31 @@
                 console.log("hit run")
                 Table.capture(event.data.element, path);
             }
+            table.toggleCanMove();
             updatetable();
         };
-        updatetable();
+        (function setup(){
+            var socket = new WebSocket("ws//localhost:3000");
+            
+            updatetable();
+
+            socket.onmessage = function(event){
+                var msg = JSON.parse(event.data);
+                if(msg.type === messages.T_SET_PLAYER){
+                   table.setId(parseInt(msg.data));
+                }
+                if(msg.type === messages.T_YOUR_TURN){
+                    table.toggleCanMove();
+                }
+                if(msg.type === messages.T_MOVE_MADE){
+                    table.toggleCanMove();
+                    table.setBoard(msg.data);
+                    updatetable();
+                }
+            }
+            socket.onopen = function(){
+                socket.send("{}");
+            }
+            table.setSocket(socket);
+        }())
         });
