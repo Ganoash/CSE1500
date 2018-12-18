@@ -1,3 +1,5 @@
+var Stats = require("./gameStats.js");
+
 var game = function(gameId){
     this.id = gameId;
     this.player1 = null;
@@ -47,6 +49,11 @@ game.prototype.setState = function(w){
     }
     else{
         return new Error("impossible to change status", this.gameState);
+    }
+    if(w == "1"|| w=="2"){
+        Stats.gamesCompleted++;
+    } else if(w == "ABORTED"){
+        Stats.gamesAbolished++;
     }
 }
 

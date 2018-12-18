@@ -4,6 +4,7 @@ var http = require('http');
 var websocket = require('ws');
 var messages = require("./public/javascripts/message.js")
 var Game = require("./Game");
+var Stats = require("./gameStats");
 
 var app = express();
 const port = process.argv[2];
@@ -12,15 +13,23 @@ const port = process.argv[2];
 app.use(express.static(__dirname + "/public"))
 //give index
 app.get("/", function(req, res){
-  res.sendFile("game.html", {root: "./public"});
+  res.sendFile("splash.html", {root: "./public"});
 });
+
+app.get("/play", function(req,res){
+  res.sendFile("game.html", {root: "./public"});
+})
+
+app.get("/statistics", function(req, res){
+  res.json(Stats);
+})
 
 var server = http.createServer(app);
 const wss = new websocket.Server({server});
 
 var websocket = {};
 var connectionid = 0;
-var currGame = new Game();
+var currGame = new Game(Stats.gamesStarted++);
 
 setInterval(function(){
   for(let i in websocket){
